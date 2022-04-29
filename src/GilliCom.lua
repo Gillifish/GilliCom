@@ -187,28 +187,13 @@ function loginWindow()
     GCLabel:render()
     UserL:render()
     PassL:render()
+
+    loginEvents()
     
     return 0
 end
 
-function mainWindow()
-    tLabel = Label.new("Welcome to the main page!", 1, 1)
-    tLabel:render()
-
-    return 0
-end
-
-function renderPage(pageNum)
-    term.clear()
-    if (pageNum == 1) then
-        loginWindow()
-    end
-    if (pageNum == 2) then
-        mainWindow()
-    end
-end
-
-function events()
+function loginEvents()
     local xMin = PassL:getInputX()
     local xMax = xMin + 6
     local userY = UserL:getInputY()
@@ -236,17 +221,43 @@ function events()
     return 0
 end
 
+function mainWindow()
+    backButton = Button.new("Logoff", 1, 1, colors.red)
+    backButton:render()
+
+    mainWindowEvents()
+
+    return 0
+end
+
+function mainWindowEvents()
+    local event, button, x, y = os.pullEvent("mouse_click")
+    term.setCursorPos(x, y)
+    if (x >= backButton:getXPos() and x <= backButton:getXEnd() and y == backButton:getYPos()) then
+        backButton:onClick(renderPage(1))
+    end
+end
+
+function renderPage(pageNum)
+    term.clear()
+    if (pageNum == 1) then
+        loginWindow()
+    end
+    if (pageNum == 2) then
+        mainWindow()
+    end
+end
+
 function clearFields()
     UInput:clearLine(10)
     PInput:clearLine(10)
 end
 
-function Main()
+function GilliCom()
     local login = 1
 
     term.clear()
     renderPage(login)
-    events()
 end
 
-Main()
+GilliCom()
