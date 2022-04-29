@@ -77,21 +77,43 @@ end
 Button = {}
 Button.__index = Button
 
-function Button:render()
+function getTopLeft()
     return 0
 end
 
-function Button.new(xPos, yPos, width, height)
+function getBottomRight()
+    return 0
+end
+
+function Button:onClick(val1, val2, func)
+    val1 = val1 or nil
+    val2 = val2 or nil
+    func = func or nil
+end
+
+function Button:render()
+    term.setBackgroundColor(self.color)
+    term.setCursorPos(self.xPos, self.yPos)
+    io.write(self.name)
+    term.setBackgroundColor(colors.black)
+end
+
+function Button.new(name, xPos, yPos, color)
     local instance = setmetatable({}, Button)
+    instance.name = name
     instance.xPos = xPos
     instance.yPos = yPos
-    instance.width = width
-    instance.height = height
+    instance.color = color
 
     return instance
 end
 -- ======================================
 
+
+
+-- ========= Border Class ===============
+
+-- ======================================
 
 -- =========> MAIN APPLICATION <=========
 
@@ -105,7 +127,9 @@ function loginWindow()
     PassL = Label.new("Password:", 17, 10)
     UInput = Input.new(UserL:getInputX(), UserL:getInputY())
     PInput = Input.new(PassL:getInputX(), PassL:getInputY())
+    B1 = Button.new("Login", 22, 13, colors.blue)
 
+    B1:render()
     GCLabel:render()
     UserL:render()
     PassL:render()
