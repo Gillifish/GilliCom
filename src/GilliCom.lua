@@ -60,6 +60,18 @@ function Input:clearLine(amount)
 end
 
 function Input:read()
+    lineClearAmount = 10
+
+    term.setCursorPos(self.xPos, self.yPos)
+    local xPos = self.xPos
+    
+    for i = 0, lineClearAmount, 1
+    do
+        io.write(" ")
+        xPos = xPos + 1
+        term.setCursorPos(xPos, self.yPos)
+    end
+
     term.setCursorBlink(true)
     term.setCursorPos(self.xPos, self.yPos)
     local input = io.read()
