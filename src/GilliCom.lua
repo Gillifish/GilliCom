@@ -166,7 +166,7 @@ function login(user, pass)
         renderPage(2)
     end
     if (user ~= username or pass ~= password) then
-        UInput:clearLine(10)
+        UInput:clearLine(30)
     end
 
     return 0
