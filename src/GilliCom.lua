@@ -22,13 +22,16 @@ function Label:getInputY()
     return self.inputY
 end
 
-function Label.new(name, xPos, yPos)
+function Label.new(name, xPos, yPos, bGnd)
     local instance = setmetatable({}, Label)
+
     instance.name = name
     instance.xPos = xPos
     instance.yPos = yPos
     instance.inputX = xPos + string.len(name)
     instance.inputY = yPos
+    instance.bGnd = bGnd or nil
+
     return instance
 end
 
@@ -47,26 +50,33 @@ end
 Input = {}
 Input.__index = Input
 
-function Input:clearLine(amount)
+function Input:getBackgroundColor()
+    return self.bGnd
+end
+
+function Input:clearLine()
     term.setCursorPos(self.xPos, self.yPos)
     local xPos = self.xPos
     
-    for i = 0, amount, 1
+    for i = 0, self.inLength, 1
     do
+        term.setBackgroundColor(self.bGnd)
         io.write(" ")
         xPos = xPos + 1
         term.setCursorPos(xPos, self.yPos)
     end
+    term.setBackgroundColor(colors.black)
 end
 
 function Input:read()
-    lineClearAmount = 10
 
     term.setCursorPos(self.xPos, self.yPos)
+    term.getBackgroundColor(self.bGnd)
     local xPos = self.xPos
     
-    for i = 0, lineClearAmount, 1
+    for i = 0, self.inLength, 1
     do
+        term.setBackgroundColor(self.bGnd)
         io.write(" ")
         xPos = xPos + 1
         term.setCursorPos(xPos, self.yPos)
@@ -76,15 +86,24 @@ function Input:read()
     term.setCursorPos(self.xPos, self.yPos)
     local input = io.read()
 
+    term.setBackgroundColor(colors.black)
+
     return input
 end
 
-function Input.new(xPos, yPos)
+function Input.new(inLength, xPos, yPos, bGnd)
     local instance = setmetatable({}, Input)
+    instance.inLength = inLength
     instance.xPos = xPos
     instance.yPos = yPos
+    instance.bGnd = bGnd or colors.black
 
     return instance
+end
+
+function Input:render()
+    paintutils.drawLine(self.xPos, self.yPos, self.xPos + 10, self.yPos, self.bGnd)
+    term.setBackgroundColor(colors.black)
 end
 
 function lineInput(xPos, yPos)
@@ -95,7 +114,6 @@ function lineInput(xPos, yPos)
     return input
 end
 -- ======================================
-
 
 -- ========= Button Class ===============
 Button = {}
@@ -166,7 +184,8 @@ function login(user, pass)
         renderPage(2)
     end
     if (user ~= username or pass ~= password) then
-        UInput:clearLine(30)
+        UInput:clearLine()
+        PInput:clearLine()
     end
 
     return 0
@@ -176,14 +195,16 @@ function loginWindow()
     GCLabel = Label.new("GilliCom V0.2", 1, 1)
     UserL = Label.new("Username:", 17, 9)
     PassL = Label.new("Password:", 17, 10)
-    UInput = Input.new(UserL:getInputX(), UserL:getInputY())
-    PInput = Input.new(PassL:getInputX(), PassL:getInputY())
+    UInput = Input.new(10, UserL:getInputX(), UserL:getInputY(), colors.gray)
+    PInput = Input.new(10, PassL:getInputX(), PassL:getInputY(), colors.gray)
     B1 = Button.new("Login", 22, 13, colors.blue)
     clearButton = Button.new("Clear", 28, 13, colors.white)
 
     B1:render()
     clearButton:render()
     GCLabel:render()
+    UInput:render()
+    PInput:render()
     UserL:render()
     PassL:render()
 
