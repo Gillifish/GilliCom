@@ -1,0 +1,2 @@
+-- GilliCom Messaging System (GMS) --
+
