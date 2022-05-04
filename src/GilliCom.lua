@@ -22,16 +22,13 @@ function Label:getInputY()
     return self.inputY
 end
 
-function Label.new(name, xPos, yPos, bGnd)
+function Label.new(name, xPos, yPos)
     local instance = setmetatable({}, Label)
-
     instance.name = name
     instance.xPos = xPos
     instance.yPos = yPos
     instance.inputX = xPos + string.len(name)
     instance.inputY = yPos
-    instance.bGnd = bGnd or nil
-
     return instance
 end
 
@@ -50,6 +47,22 @@ end
 Input = {}
 Input.__index = Input
 
+function Input:getXPos()
+    return self.xPos
+end
+
+function Input:getYPos()
+    return self.yPos
+end
+
+function Input:getInLength()
+    return self.inLength
+end
+
+function Input:getXEnd()
+    return self.xPos + self.inLength
+end
+
 function Input:getBackgroundColor()
     return self.bGnd
 end
@@ -57,6 +70,7 @@ end
 function Input:clearLine()
     term.setCursorPos(self.xPos, self.yPos)
     local xPos = self.xPos
+    term.clearLine()
     
     for i = 0, self.inLength, 1
     do
@@ -96,13 +110,13 @@ function Input.new(inLength, xPos, yPos, bGnd)
     instance.inLength = inLength
     instance.xPos = xPos
     instance.yPos = yPos
-    instance.bGnd = bGnd or colors.black
+    instance.bGnd = bGnd
 
     return instance
 end
 
 function Input:render()
-    paintutils.drawLine(self.xPos, self.yPos, self.xPos + 10, self.yPos, self.bGnd)
+    paintutils.drawLine(self.xPos, self.yPos, self.xPos + self.inLength, self.yPos, self.bGnd)
     term.setBackgroundColor(colors.black)
 end
 
@@ -166,12 +180,18 @@ end
 Border = {}
 Border.__index = Border
 
-function Border.new()
+function Border:render()
+    paintutils.drawLine(self.xPos, self.yPos, 52, self.yPos, self.bGnd)
+end
+
+function Border.new(xPos, yPos, bGnd)
     local instance = setmetatable({}, Border)
+    instance.xPos = xPos
+    instance.yPos = yPos
+    instance.bGnd = bGnd
 
     return instance
 end
-
 -- ======================================
 
 -- =========> MAIN APPLICATION <=========

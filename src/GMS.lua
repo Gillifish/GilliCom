@@ -47,6 +47,22 @@ end
 Input = {}
 Input.__index = Input
 
+function Input:getXPos()
+    return self.xPos
+end
+
+function Input:getYPos()
+    return self.yPos
+end
+
+function Input:getInLength()
+    return self.inLength
+end
+
+function Input:getXEnd()
+    return self.xPos + self.inLength
+end
+
 function Input:getBackgroundColor()
     return self.bGnd
 end
@@ -54,6 +70,7 @@ end
 function Input:clearLine()
     term.setCursorPos(self.xPos, self.yPos)
     local xPos = self.xPos
+    term.clearLine()
     
     for i = 0, self.inLength, 1
     do
@@ -99,7 +116,7 @@ function Input.new(inLength, xPos, yPos, bGnd)
 end
 
 function Input:render()
-    paintutils.drawLine(self.xPos, self.yPos, self.xPos + 10, self.yPos, self.bGnd)
+    paintutils.drawLine(self.xPos, self.yPos, self.xPos + self.inLength, self.yPos, self.bGnd)
     term.setBackgroundColor(colors.black)
 end
 
@@ -163,22 +180,34 @@ end
 Border = {}
 Border.__index = Border
 
-function Border.new()
+function Border:render()
+    paintutils.drawLine(self.xPos, self.yPos, 52, self.yPos, self.bGnd)
+end
+
+function Border.new(xPos, yPos, bGnd)
     local instance = setmetatable({}, Border)
+    instance.xPos = xPos
+    instance.yPos = yPos
+    instance.bGnd = bGnd
 
     return instance
 end
-
 -- ======================================
 
 -- GilliCom Messaging System (GMS) --
 
 function mainWindow()
     GMSLabel = Label.new("GMS 0.1", 45, 1)
-    sendBtn = Button.new("Send", 1, 19, colors.blue)
+    sendBtn = Button.new("Send", 20, 18, colors.blue)
+    clearBtn = Button.new("Clear", 28, 18, colors.white)
+    msgInput = Input.new(20, 16, 16, colors.gray)
+    paintutils.drawBox(1, 1, 51, 14, colors.blue)
 
     GMSLabel:render()
+    term.setBackgroundColor(colors.black)
     sendBtn:render()
+    clearBtn:render()
+    msgInput:render()
 
     mainWindowEvents()
 
@@ -195,6 +224,12 @@ function mainWindowEvents()
             if (x >= sendBtn:getXPos() and x <= sendBtn:getXEnd() and y == sendBtn:getYPos()) then
                 term.setCursorPos(1,1)
                 
+            end
+            if (x >= clearBtn:getXPos() and x <= clearBtn:getXEnd() and y == clearBtn:getYPos()) then
+                msgInput:clearLine()
+            end
+            if (x >= msgInput:getXPos() and x <= msgInput:getXEnd() and y == msgInput:getYPos()) then
+                msgInput:read()
             end
         end
     end
