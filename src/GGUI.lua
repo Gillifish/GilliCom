@@ -174,22 +174,3 @@ function Button.new(name, xPos, yPos, color)
     return instance
 end
 -- ======================================
-
-
--- ========= Border Class ===============
-Border = {}
-Border.__index = Border
-
-function Border:render()
-    paintutils.drawLine(self.xPos, self.yPos, 52, self.yPos, self.bGnd)
-end
-
-function Border.new(xPos, yPos, bGnd)
-    local instance = setmetatable({}, Border)
-    instance.xPos = xPos
-    instance.yPos = yPos
-    instance.bGnd = bGnd
-
-    return instance
-end
--- ======================================
