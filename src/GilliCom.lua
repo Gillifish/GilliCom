@@ -175,24 +175,76 @@ function Button.new(name, xPos, yPos, color)
 end
 -- ======================================
 
+-- TODO: Item Selection
+-- ========= SLabel Class ================
+SLabel = {}
+SLabel.__index = SLabel
 
--- ========= Border Class ===============
-Border = {}
-Border.__index = Border
-
-function Border:render()
-    paintutils.drawLine(self.xPos, self.yPos, 52, self.yPos, self.bGnd)
+function SLabel:getSelected()
+    return self.selected
 end
 
-function Border.new(xPos, yPos, bGnd)
-    local instance = setmetatable({}, Border)
+function SLabel:getName()
+    return self.name
+end
+
+function SLabel:getX()
+    return self.xPos
+end
+
+function SLabel:getY()
+    return self.yPos
+end
+
+function SLabel:getXEnd()
+    return self.xPos + self.labelLen
+end
+
+function SLabel:getInputX()
+    return self.inputX
+end
+
+function SLabel:getInputY()
+    return self.inputY
+end
+
+function SLabel.new(name, xPos, yPos)
+    local instance = setmetatable({}, SLabel)
+    instance.name = name
     instance.xPos = xPos
     instance.yPos = yPos
-    instance.bGnd = bGnd
-
+    instance.inputX = xPos + string.len(name)
+    instance.inputY = yPos
+    instance.labelLen = string.len(name)
+    instance.selected = false
     return instance
 end
--- ======================================
+
+function SLabel:toggle()
+    local toggleCheck = 0
+    if self.selected == false then
+        toggleCheck = 1
+        self.selected = true
+
+        term.setCursorPos(self.xPos, self.yPos)
+        term.setBackgroundColor(colors.gray)
+        io.write(self.name)
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.white)
+    end
+    if self.selected == true and toggleCheck == 0 then
+        self.selected = false
+        term.setCursorPos(self.xPos, self.yPos)
+        io.write(self.name)
+    end
+    toggleCheck = 0
+end
+
+function SLabel:render()
+    term.setCursorPos(self.xPos, self.yPos)
+    io.write(self.name)
+end
+-- ========================================
 
 -- =========> MAIN APPLICATION <=========
 
@@ -263,6 +315,10 @@ end
 
 function mainWindow()
     backButton = Button.new("Logoff", 1, 1, colors.red)
+    test = SLabel.new("Test", 5, 5)
+
+
+    test:render()
     backButton:render()
 
     mainWindowEvents()
@@ -271,10 +327,17 @@ function mainWindow()
 end
 
 function mainWindowEvents()
-    local event, button, x, y = os.pullEvent("mouse_click")
-    term.setCursorPos(x, y)
-    if (x >= backButton:getXPos() and x <= backButton:getXEnd() and y == backButton:getYPos()) then
-        backButton:onClick(renderPage(1))
+
+    while true do
+        local event, button, x, y = os.pullEvent("mouse_click")
+        term.setCursorPos(x, y)
+        if (x >= backButton:getXPos() and x <= backButton:getXEnd() and y == backButton:getYPos()) then
+            backButton:onClick(renderPage(1))
+        end
+
+        if (x >= test:getX() and x <= test:getXEnd() and y == test:getY()) then
+            test:toggle()
+        end
     end
 end
 

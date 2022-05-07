@@ -196,10 +196,6 @@ function SLabel:getY()
     return self.yPos
 end
 
-function SLabel:getXEnd()
-    return self.xPos + self.labelLen
-end
-
 function SLabel:getInputX()
     return self.inputX
 end
@@ -209,7 +205,7 @@ function SLabel:getInputY()
 end
 
 function SLabel.new(name, xPos, yPos)
-    local instance = setmetatable({}, SLabel)
+    local instance = setmetatable({}, Label)
     instance.name = name
     instance.xPos = xPos
     instance.yPos = yPos
@@ -220,14 +216,15 @@ function SLabel.new(name, xPos, yPos)
     return instance
 end
 
-function SLabel:toggle()
+function SLbel:toggle()
     local toggleCheck = 0
     if self.selected == false then
-        toggleCheck = 1
+        local toggleCheck = 1
         self.selected = true
 
-        term.setCursorPos(self.xPos, self.yPos)
         term.setBackgroundColor(colors.gray)
+        term.setTextColor(colors.black)
+        term.setCursorPos(self.xPos, self.yPos)
         io.write(self.name)
         term.setBackgroundColor(colors.black)
         term.setTextColor(colors.white)
@@ -245,3 +242,4 @@ function SLabel:render()
     io.write(self.name)
 end
 -- ========================================
+
