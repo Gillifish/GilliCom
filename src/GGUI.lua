@@ -70,7 +70,6 @@ end
 function Input:clearLine()
     term.setCursorPos(self.xPos, self.yPos)
     local xPos = self.xPos
-    term.clearLine()
     
     for i = 0, self.inLength, 1
     do
