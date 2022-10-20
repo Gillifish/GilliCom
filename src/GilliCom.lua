@@ -250,7 +250,7 @@ end
 
 function login(user, pass)
     username = "Gillifish"
-    password = "3665"
+    password = "0000"
 
     if (user == username and pass == password) then
         renderPage(2)
