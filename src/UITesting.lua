@@ -216,7 +216,7 @@ function SLabel.new(name, xPos, yPos)
     return instance
 end
 
-function SLbel:toggle()
+function SLabel:toggle()
     local toggleCheck = 0
     if self.selected == false then
         local toggleCheck = 1
