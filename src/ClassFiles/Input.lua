@@ -1,5 +1,4 @@
 Input = {inLength = 0, xPos = 0, yPos = 0, bGnd = nil}
-Input.__index = Input
 
 function Input:getXPos()
     return self.xPos
