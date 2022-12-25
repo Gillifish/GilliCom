@@ -1,6 +1,5 @@
 -- ========= Label Class ================
-Label = {}
-Label.__index = Label
+Label = {name = "", xPos = 0, yPos = 0}
 
 function Label:getName()
     return self.name
@@ -15,36 +14,28 @@ function Label:getY()
 end
 
 function Label:getInputX()
-    return self.inputX
+    return self.xPos + string.len(self.name)
 end
 
 function Label:getInputY()
-    return self.inputY
+    return self.yPos
 end
 
-function Label.new(name, xPos, yPos)
-    local instance = setmetatable({}, Label)
-    instance.name = name
-    instance.xPos = xPos
-    instance.yPos = yPos
-    instance.inputX = xPos + string.len(name)
-    instance.inputY = yPos
-    return instance
+function Label:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
 end
 
 function Label:render()
     term.setCursorPos(self.xPos, self.yPos)
     io.write(self.name)
 end
-
-function renderLabel(name, xPos, yPos)
-    term.setCursorPos(xPos, yPos)
-    io.write(name)
-end
 -- ======================================
 
 -- ========= Input Class ================
-Input = {}
+Input = {inLength = 0, xPos = 0, yPos = 0, bGnd = nil}
 Input.__index = Input
 
 function Input:getXPos()
@@ -104,14 +95,12 @@ function Input:read()
     return input
 end
 
-function Input.new(inLength, xPos, yPos, bGnd)
-    local instance = setmetatable({}, Input)
-    instance.inLength = inLength
-    instance.xPos = xPos
-    instance.yPos = yPos
-    instance.bGnd = bGnd
+function Input:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
 
-    return instance
+    return o
 end
 
 function Input:render()
@@ -129,8 +118,7 @@ end
 -- ======================================
 
 -- ========= Button Class ===============
-Button = {}
-Button.__index = Button
+Button = {name="", xPos=0, yPos=0, color=nil}
 
 function Button:getXEnd()
     return self.xPos + string.len(self.name)
@@ -163,14 +151,12 @@ function Button:render()
     term.setBackgroundColor(colors.black)
 end
 
-function Button.new(name, xPos, yPos, color)
-    local instance = setmetatable({}, Button)
-    instance.name = name
-    instance.xPos = xPos
-    instance.yPos = yPos
-    instance.color = color
+function Button:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
 
-    return instance
+    return o
 end
 -- ======================================
 
